@@ -16,6 +16,8 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
 	final int Width = 500;
 	int currentState = 1;
 	int frame = 0;
+	int button = 1;
+	int location = 0;
 	Font titleFont;
 	Font subtitleFont;
 	Font titleFontunbold;
@@ -23,6 +25,8 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
 	Timer timer;
 	long count = 0;
 	long prevcount = 0;
+	boolean buttonPressed = false;
+	Hunter hunter = new Hunter(false, 100);
 	
 	public void startGame() {
 		timer.start();
@@ -43,7 +47,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
 	}
 
 	void updateGameState() {
-			
+			hunter.Update(true, 450/3*button-75);
 
 	}
 
@@ -78,6 +82,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
 	void drawGameState(Graphics g) {
 		g.setColor(Color.WHITE);
 		g.fillRect(0, 0, Width, Height);
+		hunter.Draw(g);
 	}
 
 	void drawEndState(Graphics g) {
@@ -85,6 +90,41 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
 		g.fillRect(0, 0, Width, Height);
 	}
 
+	
+	boolean guessCheck() {
+		if(button==location) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	
+	void animateGuess(Graphics g) {
+		if(guessCheck()) {
+			hunter.Update(true, 450/3*button-75);
+			hunter.Draw(g);
+		}
+		else {
+			hunter.Update(true, 450/3*button-75);
+			hunter.Draw(g);
+		}
+	
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	@Override
 	public void keyPressed(KeyEvent arg0) {
 		if (arg0.getKeyCode() == KeyEvent.VK_ENTER) {
@@ -94,13 +134,23 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
 				currentState++;
 			}
 		}
-	
 	}
 
 	@Override
 	public void keyReleased(KeyEvent arg0) {
-		// TODO Auto-generated method stub
-		
+		System.out.println(arg0.getKeyCode());
+		if(arg0.getKeyCode() == 49) {
+			button = 1;
+			buttonPressed = true;
+		}
+		if(arg0.getKeyCode() == 50) {
+			button = 2;
+			buttonPressed = true;
+		}
+		if(arg0.getKeyCode() == 51) {
+			button = 3;
+			buttonPressed = true;
+		}
 	}
 
 	@Override
@@ -113,16 +163,19 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		repaint();
 		if (currentState == 1) {
-
+			
 			updateMenuState();
-
+			currentState = 1;
+			
 		} else if (currentState == 2) {
 
 			updateGameState();
+			currentState = 2;
 
 		} else if (currentState == 3) {
-
+			
 			updateEndState();
+			currentState = 3; 
 
 		}
 		
