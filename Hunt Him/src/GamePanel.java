@@ -29,8 +29,10 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
 	long prevcount = 0;
 	Hunter hunter = new Hunter(false, 1);
 	Hunted hunted = new Hunted(false, 1);
+	Projectile projectile = new Projectile(1, 50);
 	Random r = new Random();
-	int preyLocation = r.nextInt(3);
+	int preyLocation = 2;
+	boolean firing = false;
 
 	public void startGame() {
 		timer.start();
@@ -55,6 +57,10 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
 		hunter.ChangeLoaction(button);
 		hunted.Update(true);
 		hunted.ChangeLoaction(preyLocation);
+		projectile.update(hunter.currentLocation(), firing);
+		if(projectile.yCordinate < hunted.y) {
+			firing = false;
+		}
 	}
 
 	void updateEndState() {
@@ -90,6 +96,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
 		g.fillRect(0, 0, Width, Height);
 		hunter.Draw(g);
 		hunted.Draw(g);
+		projectile.draw(g);
 	}
 
 	void drawEndState(Graphics g) {
@@ -98,19 +105,27 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
 	}
 
 	void animateGuess(Graphics g) {
-			hunter.Update(true);
-			hunter.ChangeLoaction(button);
-			hunter.Draw(g);
-
+		hunter.Update(true);
+		hunter.ChangeLoaction(button);
+		hunter.Draw(g);
+		
+		
 	}
 
 	@Override
 	public void keyPressed(KeyEvent arg0) {
 		if (arg0.getKeyCode() == KeyEvent.VK_ENTER) {
+			preyLocation = r.nextInt(3);
+			System.out.println(preyLocation);
 			if (currentState == 3) {
 				currentState = 1;
 			} else {
 				currentState++;
+			}
+		}
+		if (arg0.getKeyCode() == KeyEvent.VK_SPACE) {
+			if (currentState == 2) {
+
 			}
 		}
 	}
@@ -131,20 +146,21 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
 
 		}
 		if (arg0.getKeyCode() == 37) {
-			if(button>1) {
+			if (button > 1) {
 				button--;
-			}
-			else {
+			} else {
 				button = 3;
 			}
 		}
 		if (arg0.getKeyCode() == 39) {
-			if(button<3) {
+			if (button < 3) {
 				button++;
-			}
-			else {
+			} else {
 				button = 1;
 			}
+		}
+		if (arg0.getKeyCode() == KeyEvent.VK_SPACE) {
+			firing = true;
 		}
 	}
 

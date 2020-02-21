@@ -16,7 +16,7 @@ public class HuntHim {
 	
 	HuntHim(){
 		 frame = new JFrame();
-		 GamePanel = new GamePanel();
+		 GamePanel = new GamePanel(); 
 	}
 	void setup() {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

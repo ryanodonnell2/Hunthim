@@ -4,12 +4,15 @@ import java.awt.Graphics;
 public class Hunted {
 	boolean Shown = false;
 	int x;
-	int location;
+	int location = 2;
 	int cycle = 0;
+	int y = 100;
 
 	Hunted(boolean being_Shown, int Location) {
 		Shown = being_Shown;
-		x = 450 / 3 * location - 75;
+		location = Location+1;
+		x = (450 / (3 * location)) - 75;
+		System.out.println(x);
 	}
 
 	void Update(boolean being_Shown) {
@@ -18,7 +21,7 @@ public class Hunted {
 	}
 	
 	void ChangeLoaction(int Location) {
-		location = Location;
+		location = Location+1;
 	}
 
 	int currentLocation() {
@@ -35,9 +38,9 @@ public class Hunted {
 	}
 
 	void Draw(Graphics g) {
-		if (Shown == true) {
+		if(Shown) {
 			g.setColor(Color.RED);
-			g.fillRect(x, 100, 50, 50);
+			g.fillRect(x, y, 50, 50);
 		}
 	}
 }
