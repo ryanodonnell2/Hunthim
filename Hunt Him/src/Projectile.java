@@ -13,19 +13,16 @@ public class Projectile {
 			}
 
 	void update(int x, boolean show) {
-		xCordinate = (450 / (3 * x)) - 75;
-		if (yCordinate < 0) {
+		xCordinate = 450 / 3 * x - 75;
+		if(show == false) {
 			shown = false;
-			yCordinate = 20;
-		}
-		else if(show == false) {
-			shown = false;
+			yCordinate = 30;
 		}
 		else {
-			shown = true;
+			shown = true;  
 		}
 		if(shown) {
-			yCordinate += 10;
+			yCordinate += 5;
 		}
 	}
 

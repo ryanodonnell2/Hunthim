@@ -20,6 +20,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
 	int frame = 0;
 	int button = 1;
 	int location = 0;
+	int score = 0;
 	Font titleFont;
 	Font subtitleFont;
 	Font titleFontunbold;
@@ -30,9 +31,14 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
 	Hunter hunter = new Hunter(false, 1);
 	Hunted hunted = new Hunted(false, 1);
 	Projectile projectile = new Projectile(1, 50);
+	Barrel barrel = new Barrel(300);
 	Random r = new Random();
 	int preyLocation = 2;
 	boolean firing = false;
+	boolean targetShown = false;
+	int targetShownTime = 0;
+	boolean hit = false;
+	
 
 	public void startGame() {
 		timer.start();
@@ -55,11 +61,29 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
 	void updateGameState() {
 		hunter.Update(true);
 		hunter.ChangeLoaction(button);
-		hunted.Update(true);
+		hunted.Update(false);
 		hunted.ChangeLoaction(preyLocation);
 		projectile.update(hunter.currentLocation(), firing);
-		if(projectile.yCordinate < hunted.y) {
+		if(projectile.yCordinate > hunted.y) {
+			if(projectile.xCordinate == hunted.x) {
+				targetShown = true;
+				score ++;
+			}
 			firing = false;
+		}
+		if(targetShownTime<100 && targetShown) {
+			hunted.Update(true);
+			targetShownTime++;
+		}
+		else if (targetShownTime>=99 && targetShown) {
+			hit = true;
+			preyLocation = r.nextInt(3);
+			targetShownTime = 0;
+			targetShown = false;
+		}
+		else {
+			targetShownTime = 0;
+			targetShown = false;
 		}
 	}
 
@@ -95,8 +119,13 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
 		g.setColor(Color.WHITE);
 		g.fillRect(0, 0, Width, Height);
 		hunter.Draw(g);
+		barrel.draw(g);
 		hunted.Draw(g);
 		projectile.draw(g);
+		g.setColor(Color.BLACK);
+		g.setFont(subtitleFont);
+		String text = "Score: "+score;
+		g.drawString(text, 450/2-2*(text.length()/2), 20);
 	}
 
 	void drawEndState(Graphics g) {
@@ -121,11 +150,6 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
 				currentState = 1;
 			} else {
 				currentState++;
-			}
-		}
-		if (arg0.getKeyCode() == KeyEvent.VK_SPACE) {
-			if (currentState == 2) {
-
 			}
 		}
 	}

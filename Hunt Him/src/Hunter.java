@@ -28,7 +28,7 @@ public class Hunter {
 	void Draw(Graphics g) {
 		if (Shown == true) {
 			g.setColor(Color.YELLOW);
-			g.fillRect(x, 20, 50, 50);
+			g.fillRect(x, 40, 50, 50);
 		}
 	}
 }

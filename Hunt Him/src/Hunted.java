@@ -6,7 +6,7 @@ public class Hunted {
 	int x;
 	int location = 2;
 	int cycle = 0;
-	int y = 100;
+	int y = 300;
 
 	Hunted(boolean being_Shown, int Location) {
 		Shown = being_Shown;
