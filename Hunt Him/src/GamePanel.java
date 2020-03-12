@@ -38,7 +38,25 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
 	boolean targetShown = false;
 	int targetShownTime = 0;
 	boolean hit = false;
-	
+	boolean showingInstructions = false;
+	String Instr = "Press Space to See Instructions";
+	String InstrNote = "You get 3 lives, if you miss you ";
+	String p2 = "lose a life. ";
+	String bottomText = Instr;
+	int lives = 10;
+	int livesAdding = 2;
+	int firingLocation = 0;
+	int showingTime = 50;
+	int center = Width/2;
+	int strlen;
+	boolean alreadyFound = false;
+	int prevLevel = 0;
+	int level = 0;
+	int LevelUpRequired = 5;
+	int rtime = 10;
+	int showTime = r.nextInt(rtime);
+	int TimeShowing = 0;
+	boolean alreadyShown = false;
 
 	public void startGame() {
 		timer.start();
@@ -64,26 +82,61 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
 		hunted.Update(false);
 		hunted.ChangeLoaction(preyLocation);
 		projectile.update(hunter.currentLocation(), firing);
+		
+		if(alreadyShown == false && currentState == 2) {
+			showTime = r.nextInt(rtime);
+			alreadyShown = true;
+		}
+		if(TimeShowing<showTime) {
+			hunted.Update(true);
+			hunted.hint(true);
+			TimeShowing++;
+			System.out.println(TimeShowing);
+			System.out.println(showTime);
+		}
+		else {
+			hunted.hint(false);
+			hunted.Update(false);
+		}
+		
 		if(projectile.yCordinate > hunted.y) {
 			if(projectile.xCordinate == hunted.x) {
 				targetShown = true;
+				if(alreadyFound == false) {
 				score ++;
+				alreadyFound = true;
+				}
+			}
+			else {
+				lives--;
 			}
 			firing = false;
 		}
-		if(targetShownTime<100 && targetShown) {
+		if(targetShownTime<showingTime && targetShown) {
 			hunted.Update(true);
 			targetShownTime++;
 		}
-		else if (targetShownTime>=99 && targetShown) {
+		else if (targetShownTime>=showingTime && targetShown) {
 			hit = true;
 			preyLocation = r.nextInt(3);
 			targetShownTime = 0;
 			targetShown = false;
+			alreadyFound = false;
+			alreadyShown = false;
+			TimeShowing = 0;
 		}
 		else {
 			targetShownTime = 0;
 			targetShown = false;
+		}
+		if(score%LevelUpRequired == 0 ) {
+			level = score/LevelUpRequired;
+		}
+		if(level != prevLevel) {
+			if(lives < 25) {
+			lives += livesAdding;
+			}
+			prevLevel = level;
 		}
 	}
 
@@ -111,7 +164,14 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
 		g.drawString("HUNT HIM", 137, 193);
 		g.setFont(subtitleFont);
 		g.drawString("Press ENTER to start", 135, 333);
-		g.drawString("Press SPACE for instructions", 100, 433);
+		center = Width/2;
+		strlen = g.getFontMetrics().stringWidth(bottomText)/2; 
+		g.drawString(bottomText, center - strlen, 433); 
+		if(showingInstructions) {
+		center = Width/2;
+		strlen = g.getFontMetrics().stringWidth(p2)/2; 
+		g.drawString(p2, center - strlen, 465); 
+		}
 
 	}
 
@@ -125,12 +185,25 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
 		g.setColor(Color.BLACK);
 		g.setFont(subtitleFont);
 		String text = "Score: "+score;
-		g.drawString(text, 450/2-2*(text.length()/2), 20);
+		g.drawString(text, 400-(g.getFontMetrics().stringWidth(text)/2), 20);
+		g.drawString("Lives left: "+lives, 20+(g.getFontMetrics().stringWidth(text)/2), 20);
+		if(lives<=0) {
+			currentState = 3;
+			lives = 3;
+		}
 	}
 
 	void drawEndState(Graphics g) {
 		g.setColor(Color.RED);
 		g.fillRect(0, 0, Width, Height);
+		g.setFont(subtitleFont);
+		g.setColor(Color.BLACK);
+		String text = "You lose! You found him " + score + " times!";
+		strlen = g.getFontMetrics().stringWidth(text)/2; 
+		g.drawString(text, center - strlen, 200); 
+		text = "Press Enter to continue";
+		strlen = g.getFontMetrics().stringWidth(text)/2; 
+		g.drawString(text, center - strlen, 300); 
 	}
 
 	void animateGuess(Graphics g) {
@@ -184,7 +257,19 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
 			}
 		}
 		if (arg0.getKeyCode() == KeyEvent.VK_SPACE) {
-			firing = true;
+			if(currentState == 2) {
+				firing = true;
+			}
+			else if(currentState == 1) {
+				if(showingInstructions) {
+					bottomText = Instr;
+					showingInstructions = false;
+				}
+				else {
+					bottomText = InstrNote;
+					showingInstructions = true;
+				}
+			}
 		}
 	}
 

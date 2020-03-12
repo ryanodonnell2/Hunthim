@@ -7,6 +7,9 @@ public class Hunted {
 	int location = 2;
 	int cycle = 0;
 	int y = 300;
+	Color c = Color.RED;
+	Color brown = new Color(170, 95, 34);
+	boolean hint = false;
 
 	Hunted(boolean being_Shown, int Location) {
 		Shown = being_Shown;
@@ -37,9 +40,19 @@ public class Hunted {
 		cycle = 0;
 	}
 
+	void hint(boolean show) {
+		hint = show;
+	}
+	
 	void Draw(Graphics g) {
+		if(hint) {
+			c = brown;
+		}
+		else {
+			c = Color.RED;
+		}
 		if(Shown) {
-			g.setColor(Color.RED);
+			g.setColor(c);
 			g.fillRect(x, y, 50, 50);
 		}
 	}

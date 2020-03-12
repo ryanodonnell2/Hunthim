@@ -22,7 +22,7 @@ public class Projectile {
 			shown = true;  
 		}
 		if(shown) {
-			yCordinate += 5;
+			yCordinate += 10;
 		}
 	}
 
