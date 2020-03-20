@@ -9,7 +9,6 @@ public class HuntHim {
 	static final int height = 800;
 	
 	public static void main(String[] args) {
-		System.out.println("1");
 		new HuntHim().setup();
 		
 	}
@@ -27,5 +26,6 @@ public class HuntHim {
 		frame.addKeyListener(GamePanel);
 		frame.pack();
 		GamePanel.startGame();
+		//test
 	}
 }

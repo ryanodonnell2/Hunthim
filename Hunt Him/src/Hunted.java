@@ -15,7 +15,6 @@ public class Hunted {
 		Shown = being_Shown;
 		location = Location+1;
 		x = (450 / (3 * location)) - 75;
-		System.out.println(x);
 	}
 
 	void Update(boolean being_Shown) {
@@ -28,7 +27,6 @@ public class Hunted {
 	}
 
 	int currentLocation() {
-		System.out.println(location);
 		return location;
 	}
 	

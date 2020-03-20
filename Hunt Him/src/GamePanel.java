@@ -41,42 +41,64 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
 	boolean showingInstructions = false;
 	String Instr = "Press Space to See Instructions";
 	String InstrNote = "You get 3 lives, if you miss you ";
-	String p2 = "lose a life. ";
+	String p2 = "lose a life. If you don't find him in";
+	String p3 = "by the time the bar vanishes you lose a life.";
 	String bottomText = Instr;
-	int lives = 10;
-	int livesAdding = 2;
+	
+	
+	int lives = 3;
+	
+	
+	int livesAdding = 1;
 	int firingLocation = 0;
 	int showingTime = 50;
 	int center = Width/2;
 	int strlen;
+	
+	
 	boolean alreadyFound = false;
 	int prevLevel = 0;
 	int level = 0;
 	int LevelUpRequired = 5;
-	int rtime = 10;
-	int showTime = r.nextInt(rtime);
+	double rtime = 100;
+	double showTime = r.nextInt((int) rtime)+rtime/10;
 	int TimeShowing = 0;
 	boolean alreadyShown = false;
+	
+	long timeFound = System.currentTimeMillis();
+	long tempTimefound = 0;
+	long timeSinceLastFind = 0;
+	TimeBar bar = new TimeBar(Width, 5, 300);
+	double timetofind = 300;
+	
+	String text = "";
+	
 
 	public void startGame() {
 		timer.start();
-		System.out.println("2");
 	}
 
 	GamePanel() {
-		System.out.println("1");
 		titleFont = new Font("Arial", Font.BOLD, 48);
 		subtitleFont = new Font("Arial", Font.BOLD, 24);
 		titleFontunbold = new Font("Arial", Font.PLAIN, 48);
 		subtitleFontunbold = new Font("Arial", Font.PLAIN, 24);
 		timer = new Timer(1000 / 60, this);
+		score = 0;
+		timeFound = System.currentTimeMillis();
+		timeSinceLastFind = 0;
 	}
 
 	void updateMenuState() {
-
+		timeFound = System.currentTimeMillis();
 	}
 
 	void updateGameState() {
+		
+		tempTimefound = System.currentTimeMillis()-timeFound;
+		timeSinceLastFind = tempTimefound/100;
+		bar.currentTime(timeSinceLastFind);
+		
 		hunter.Update(true);
 		hunter.ChangeLoaction(button);
 		hunted.Update(false);
@@ -84,15 +106,13 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
 		projectile.update(hunter.currentLocation(), firing);
 		
 		if(alreadyShown == false && currentState == 2) {
-			showTime = r.nextInt(rtime);
+			showTime = r.nextInt((int) rtime);
 			alreadyShown = true;
 		}
 		if(TimeShowing<showTime) {
 			hunted.Update(true);
 			hunted.hint(true);
 			TimeShowing++;
-			System.out.println(TimeShowing);
-			System.out.println(showTime);
 		}
 		else {
 			hunted.hint(false);
@@ -104,6 +124,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
 				targetShown = true;
 				if(alreadyFound == false) {
 				score ++;
+				timeFound = System.currentTimeMillis();
 				alreadyFound = true;
 				}
 			}
@@ -135,13 +156,33 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
 		if(level != prevLevel) {
 			if(lives < 25) {
 			lives += livesAdding;
+			if(rtime >= 3.5) {
+			rtime/=2;
+			}
+			else {
+				rtime = 1;
+			}
+			}
+			if(level%2 == 0) {
+				bar.changeTimeTillEmpty(bar.timeLength/2);
+				showingTime/=2;
+			}
+			if(level%3 == 0) {
+				LevelUpRequired+=2;
 			}
 			prevLevel = level;
+		}
+		if(bar.timeLeft() == false) {
+			lives--;
+			timeFound = System.currentTimeMillis();
+			tempTimefound = System.currentTimeMillis()-timeFound;
+			timeSinceLastFind = tempTimefound/100;
+			bar.currentTime(timeSinceLastFind);
+			System.out.println("Life Subtracted");
 		}
 	}
 
 	void updateEndState() {
-
 	}
 
 	void drawMenuState(Graphics g) {
@@ -170,7 +211,10 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
 		if(showingInstructions) {
 		center = Width/2;
 		strlen = g.getFontMetrics().stringWidth(p2)/2; 
-		g.drawString(p2, center - strlen, 465); 
+		g.drawString(p2, center - strlen, 460); 
+		center = Width/2;
+		strlen = g.getFontMetrics().stringWidth(p3)/2; 
+		g.drawString(p3, center - strlen, 485); 
 		}
 
 	}
@@ -184,13 +228,16 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
 		projectile.draw(g);
 		g.setColor(Color.BLACK);
 		g.setFont(subtitleFont);
-		String text = "Score: "+score;
+		text = "Score: "+score;
+		g.drawString(text, 250-(g.getFontMetrics().stringWidth(text)/2), 20);
+		text = "Level: "+(level+1);
 		g.drawString(text, 400-(g.getFontMetrics().stringWidth(text)/2), 20);
-		g.drawString("Lives left: "+lives, 20+(g.getFontMetrics().stringWidth(text)/2), 20);
+		g.drawString("Lives left: "+lives, (g.getFontMetrics().stringWidth(text)/2)-25, 20);
 		if(lives<=0) {
 			currentState = 3;
 			lives = 3;
 		}
+		bar.DrawBar(g);
 	}
 
 	void drawEndState(Graphics g) {
@@ -218,7 +265,6 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
 	public void keyPressed(KeyEvent arg0) {
 		if (arg0.getKeyCode() == KeyEvent.VK_ENTER) {
 			preyLocation = r.nextInt(3);
-			System.out.println(preyLocation);
 			if (currentState == 3) {
 				currentState = 1;
 			} else {
@@ -229,7 +275,6 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
 
 	@Override
 	public void keyReleased(KeyEvent arg0) {
-		System.out.println(arg0.getKeyCode());
 		if (arg0.getKeyCode() == 49 || arg0.getKeyCode() == 97) {
 			button = 1;
 
@@ -320,8 +365,6 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
 	}
 
 	public void keyTyped1(KeyEvent e) {
-		// TODO Auto-generated method stub
-		System.out.println('3');
 	}
 
 }

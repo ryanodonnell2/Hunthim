@@ -21,7 +21,6 @@ public class Hunter {
 	}
 
 	int currentLocation() {
-		System.out.println(location);
 		return location;
 	}
 
