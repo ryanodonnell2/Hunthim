@@ -44,14 +44,12 @@ public class Hunted {
 	
 	void Draw(Graphics g) {
 		if(hint) {
-			c = brown;
+			g.drawImage(GamePanel.barrel2Img, 450 / 3 * location - 75, 300, 50, 50, null);
 		}
 		else {
-			c = Color.RED;
-		}
-		if(Shown) {
-			g.setColor(c);
-			g.fillRect(x, y, 50, 50);
+			if(Shown) {
+				g.drawImage(GamePanel.huntedImg, 450 / 3 * location - 75, 300, 50, 50, null);
+			}
 		}
 	}
 }

@@ -11,8 +11,8 @@ public class Barrel {
 	void draw(Graphics g){
 		Color brown = new Color(130, 60, 4);
 		g.setColor(brown);
-		g.fillRect(450 / 3 * 1 - 75, 300, 50, 50);
-		g.fillRect(450 / 3 * 2 - 75, 300, 50, 50);
-		g.fillRect(450 / 3 * 3 - 75, 300, 50, 50);
+		g.drawImage(GamePanel.barrelImg, 450 / 3 * 1 - 75, 300, 50, 50, null);
+		g.drawImage(GamePanel.barrelImg, 450 / 3 * 2 - 75, 300, 50, 50, null);
+		g.drawImage(GamePanel.barrelImg, 450 / 3 * 3 - 75, 300, 50, 50, null);
 	}
 }

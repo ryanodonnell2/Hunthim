@@ -5,8 +5,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.Random;
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -33,11 +36,16 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
 	Projectile projectile = new Projectile(1, 50);
 	Barrel barrel = new Barrel(300);
 	Random r = new Random();
+	
 	int preyLocation = 2;
+	
+	
 	boolean firing = false;
 	boolean targetShown = false;
 	int targetShownTime = 0;
 	boolean hit = false;
+	
+	
 	boolean showingInstructions = false;
 	String Instr = "Press Space to See Instructions";
 	String InstrNote = "You get 3 lives, if you miss you ";
@@ -73,6 +81,16 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
 	
 	String text = "";
 	
+	
+	public static BufferedImage barrelImg;
+	
+	public static BufferedImage barrel2Img;
+
+    public static BufferedImage hunterImg;
+
+    public static BufferedImage huntedImg;
+    
+    public static BufferedImage boardImg;
 
 	public void startGame() {
 		timer.start();
@@ -87,10 +105,35 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
 		score = 0;
 		timeFound = System.currentTimeMillis();
 		timeSinceLastFind = 0;
+		try {
+
+            barrelImg = ImageIO.read(this.getClass().getResourceAsStream("Barrel.jpg"));
+            
+            barrel2Img = ImageIO.read(this.getClass().getResourceAsStream("Barrel2.jpg"));
+
+            hunterImg = ImageIO.read(this.getClass().getResourceAsStream("Hunter.jpg"));
+
+            huntedImg = ImageIO.read(this.getClass().getResourceAsStream("Hunted.png"));
+            
+            boardImg = ImageIO.read(this.getClass().getResourceAsStream("board.png"));
+
+
+    } catch (IOException e) {
+
+            e.printStackTrace();
+
+    }
 	}
 
 	void updateMenuState() {
 		timeFound = System.currentTimeMillis();
+		score = 0;
+		level = 0;
+		rtime = 100;
+		bar.changeTimeTillEmpty(300);
+		lives = 3;
+		targetShownTime = 0;
+		targetShown = false;
 	}
 
 	void updateGameState() {

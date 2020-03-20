@@ -26,8 +26,7 @@ public class Hunter {
 
 	void Draw(Graphics g) {
 		if (Shown == true) {
-			g.setColor(Color.YELLOW);
-			g.fillRect(x, 40, 50, 50);
+			g.drawImage(GamePanel.hunterImg, x, 40, 50, 50, null);
 		}
 	}
 }

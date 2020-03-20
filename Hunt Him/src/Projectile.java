@@ -28,8 +28,7 @@ public class Projectile {
 
 	void draw(Graphics g) {
 		if (shown) {
-			g.setColor(Color.BLUE);
-			g.fillRect(xCordinate, yCordinate, 50, 50);
+			g.drawImage(GamePanel.boardImg, xCordinate, yCordinate, 50, 50, null);
 		}
 	}
 }
