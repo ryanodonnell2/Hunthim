@@ -26,6 +26,6 @@ public class HuntHim {
 		frame.addKeyListener(GamePanel);
 		frame.pack();
 		GamePanel.startGame();
-		//test
 	}
 }
+

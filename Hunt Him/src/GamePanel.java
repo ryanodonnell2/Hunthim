@@ -13,6 +13,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+@SuppressWarnings("serial")
 public class GamePanel extends JPanel implements KeyListener, ActionListener {
 	final int MENU_STATE = 0;
 	final int GAME_STATE = 1;
@@ -111,9 +112,9 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
             
             barrel2Img = ImageIO.read(this.getClass().getResourceAsStream("Barrel2.jpg"));
 
-            hunterImg = ImageIO.read(this.getClass().getResourceAsStream("Hunter.jpg"));
+            hunterImg = ImageIO.read(this.getClass().getResourceAsStream("Ryan.png"));
 
-            huntedImg = ImageIO.read(this.getClass().getResourceAsStream("Hunted.png"));
+            huntedImg = ImageIO.read(this.getClass().getResourceAsStream("Luke.png"));
             
             boardImg = ImageIO.read(this.getClass().getResourceAsStream("board.png"));
 
@@ -237,7 +238,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
 		if (frame % 200 == 0) {
 			frame = 0;
 		}
-		g.setColor(Color.WHITE);
+		g.setColor(Color.white);
 		g.fillRect(0, 0, Width, Height);
 		g.setColor(Color.RED);
 		for (int i = -1; i < 8; i++) {
@@ -245,7 +246,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
 		}
 		g.setFont(titleFont);
 		g.setColor(new Color(0, 0, 0));
-		g.drawString("HUNT HIM", 137, 193);
+		g.drawString("FIND HIM", 137, 193);
 		g.setFont(subtitleFont);
 		g.drawString("Press ENTER to start", 135, 333);
 		center = Width/2;
